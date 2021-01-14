@@ -1,11 +1,11 @@
-//the package is moving along with the helicopter even when it is on the ground
-//the package is bouncing
 //the package is not dropping if we move the helicopter first(and it is flinging)
 
 
 //Declaring Variables
 var helicopterIMG, helicopterSprite, packageSprite,packageIMG;
 var packageBody,ground
+var gameState=0;
+var moveState=0;
 //declaring constant variables
 const Engine = Matter.Engine;
 const World = Matter.World;
@@ -84,37 +84,38 @@ function draw() {
   background(0);
   packageSprite.x= packageBody.position.x ;
   packageSprite.y= packageBody.position.y ;
-  if (keyDown("right") && helicopterSprite.x<675)
-  {
-	  helicopterSprite.x=helicopterSprite.x+10;
-	  packageBody.position.x=helicopterSprite.x;
-	  console.log ("step right");
-  }
-	 
-  if (keyDown("left") && helicopterSprite.x>125)
-  {
-	  helicopterSprite.x=helicopterSprite.x-10;
-	  packageBody.position.x=helicopterSprite.x;
-	  console.log ("step left");
-   }
+  console.log("gamestate:"+ gameState);
+ 
   droppackage(); 
-
   drawSprites();
    
 }
 
 function droppackage(){
-	
-   if (keyDown("down"))
+ if (keyDown("right") && helicopterSprite.x<675)
+  {
+	helicopterSprite.x=helicopterSprite.x+10;
+    if (gameState===0)
    {
-	Matter.Body.setStatic(packageBody, false);
-	console.log ("step down");
-	//packageSprite.collide(boxBase);
-	//Matter.Body.setStatic(packageBody,true)
+	  packageBody.position.x=helicopterSprite.x;
+   }
+  }
+ 	 
+  if (keyDown("left") && helicopterSprite.x>125)
+  {
+    helicopterSprite.x=helicopterSprite.x-10;
+    if (gameState===0)
+    {
+	  packageBody.position.x=helicopterSprite.x;
     }
- //if (packageSprite.isTouching(boxBase))
- //{
-//	 
-//	   console.log ("step touch");
-//}  
+   }
+   if (keyDown("down"))
+   	{
+	   gameState=1;
+	   Matter.Body.setStatic(packageBody, false);
+	}
+ if (packageSprite.isTouching(boxBase))
+  {
+	Matter.Body.setStatic(packageBody,true);
+  }  
 }
